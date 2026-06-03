@@ -1,0 +1,33 @@
+package fr.eni.cave.bo.client;
+
+import jakarta.persistence.*;
+import lombok.*;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@ToString(of = {"pseudo", "nom", "prenom"})
+@EqualsAndHashCode(of = {"pseudo"})
+@Builder
+
+@Entity
+@Table(name = "CAV_CLIENT")
+public class Client {
+    @Id
+    @Column(name = "LOGIN", nullable = false, length = 255)
+    private String pseudo;
+
+    @Column(name = "PASSWORD", nullable = false, length = 68)
+    private String password;
+
+    @Column(name = "LAST_NAME", nullable = false, length = 90)
+    private String nom;
+
+    @Column(name = "FIRST_NAME", nullable = false, length = 150)
+    private String prenom;
+
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JoinColumn(name = "ADDRESS_ID")
+    private Adresse adresse;
+}
