@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.*;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import fr.eni.cave.bo.*;
 import fr.eni.cave.bo.client.Client;
 import fr.eni.cave.dal.*;
 import lombok.extern.slf4j.Slf4j;
