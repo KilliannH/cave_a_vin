@@ -2,6 +2,7 @@ package fr.eni.cave.controller;
 
 import fr.eni.cave.bll.BouteilleService;
 import fr.eni.cave.bo.vin.Bouteille;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -68,7 +69,7 @@ public class BouteilleController {
 
     // Pour le Proprio
     @PostMapping
-    public ResponseEntity<?> ajouterBouteille(@RequestBody Bouteille bouteille) {
+    public ResponseEntity<?> ajouterBouteille(@Valid @RequestBody Bouteille bouteille) {
         if(bouteille == null) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("La bouteille a ajoutée est obligatoire");
         }
@@ -87,7 +88,7 @@ public class BouteilleController {
 
     // Pour le Proprio
     @PutMapping
-    public ResponseEntity<?> miseAJourBouteille(@RequestBody Bouteille bouteille) {
+    public ResponseEntity<?> miseAJourBouteille(@Valid @RequestBody Bouteille bouteille) {
         try {
             if (bouteille == null || bouteille.getId() == null || bouteille.getId() <= 0) {
                 return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
