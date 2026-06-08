@@ -5,10 +5,7 @@ import fr.eni.cave.bo.vin.Bouteille;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -66,6 +63,59 @@ public class BouteilleController {
         } catch (NumberFormatException e) {
             // Statut 406 : No Acceptable
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Votre identifiant n'est pas un entier");
+        }
+    }
+
+    // Pour le Proprio
+    @PostMapping
+    public ResponseEntity<?> ajouterBouteille(@RequestBody Bouteille bouteille) {
+        if(bouteille == null) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("La bouteille a ajoutée est obligatoire");
+        }
+        if(bouteille.getId()!= null) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Impossible de sauver votre bouteille");
+        }
+        try {
+            bService.ajouter(bouteille);
+            return ResponseEntity.ok(bouteille);
+        } catch (RuntimeException e) {
+
+            // Erreur BLL ou DAL
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
+        }
+    }
+
+    // Pour le Proprio
+    @PutMapping
+    public ResponseEntity<?> miseAJourBouteille(@RequestBody Bouteille bouteille) {
+        try {
+            if (bouteille == null || bouteille.getId() == null || bouteille.getId() <= 0) {
+                return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
+                        .body("La bouteille et l'identifiant sont obligatoires");
+            }
+            bService.ajouter(bouteille);
+            return ResponseEntity.ok(bouteille);
+        } catch (RuntimeException e) {
+            // Erreur BLL ou DAL
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
+        }
+    }
+
+    // Pour le Proprio
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteBouteille(@PathVariable("id") String idInPath) {
+        try {
+            final int idBouteille = Integer.parseInt(idInPath);
+            bService.supprimer(idBouteille);
+            return ResponseEntity.ok("Bouteille (" + idBouteille + ") est supprimée");
+        } catch (NumberFormatException e) {
+
+            // Statut 406 : No Acceptable
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Votre identifiant n'est pas un entier");
+        } catch (RuntimeException e) {
+
+            // Erreur BLL ou DAL
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
         }
     }
 }
